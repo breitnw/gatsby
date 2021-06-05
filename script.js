@@ -209,14 +209,31 @@ function setMainScreen(value)
 }
 
 //typing out text
-function typeCutsceneText(text, speed, punctuationDelay, brDelay) {
+function typeCutsceneText(text, speed, punctuationDelay, brDelay, impactDelay) {
 
   setEnterPromptVisibility(false);
-  curPunctuationDelay = 0;
+  curDelay = 0;
   cutsceneAdvanceable = false;
 
-  tCutsceneText.innerHTML = text[0];
-  text = text.substring(1);
+  if (text[0] === "*") {
+    text = text.substring(1);
+    while (text[0] != "*") {
+      tCutsceneText.innerHTML += text[0];
+      text = text.substring(1);
+    }
+    text = text.substring(1);
+    curDelay += impactDelay;
+  }
+  else if (text[0] === "." || text[0] === "!" || text[0] === "?" || text[0] === "-") {
+    curDelay += punctuationDelay;
+    tCutsceneText.innerHTML = text[0];
+    text = text.substring(1);
+  }
+  else
+  {
+    tCutsceneText.innerHTML = text[0];
+    text = text.substring(1);
+  }
 
   let typingInterval = setInterval(() => {
     if (text.length < 1) {
@@ -225,6 +242,23 @@ function typeCutsceneText(text, speed, punctuationDelay, brDelay) {
       cutsceneAdvanceable = true;
     }
     else {
+      /*
+      if (text[0] === "*") {
+        text = text.substring(1);
+        while (text[0] != "*") {
+          tCutsceneText.innerHTML += text[0];
+          text = text.substring(1);
+        }
+        text = text.substring(1);
+        curDelay = impactDelay;
+      }
+      */
+      /*
+      while (text[0] === "#") {
+        text = text.substring(1);
+        curDelay += 1;
+      }
+      */
       while (text[0] === " ") {
         tCutsceneText.innerHTML += " ";
         text = text.substring(1);
@@ -232,13 +266,14 @@ function typeCutsceneText(text, speed, punctuationDelay, brDelay) {
       while (text[0] === "/") {
         tCutsceneText.innerHTML += "<br>";
         text = text.substring(1);
-        curPunctuationDelay += brDelay;
+        curDelay += brDelay;
       }
-      if (curPunctuationDelay > 0) curPunctuationDelay--;
+
+      if (curDelay > 0) curDelay--;
       else {
         tCutsceneText.innerHTML += text[0];
-        if (text[0] === "." || text[0] === "!" || text[0] === "?") {
-          curPunctuationDelay = punctuationDelay;
+        if (text[0] === "." || text[0] === "!" || text[0] === "?" || text[0] === "-") {
+          curDelay = punctuationDelay;
         }
         text = text.substring(1);
       }
@@ -254,13 +289,9 @@ function clearCutsceneText() {
 }
 
 //display a full piece of cutscene dialogue
-function cutsceneSay(speaker, text, expression, scrolling, textSpeed) {
+function cutsceneSay(speaker, text, expression, textSpeed) {
   setCutsceneSpeaker(speaker);
-  if (scrolling === false) {
-    setCutsceneText(text);
-  } else {
-    typeCutsceneText(text, textSpeed, 4, 1);
-  }
+  typeCutsceneText(text, textSpeed, 4, 1, 40);
 }
 
 
@@ -290,6 +321,7 @@ function advanceCutscene() {
 }
 
 
+//ENDING CUTSCENE
 
 //start the ending cutscene
 function startEndingCutscene(){
@@ -305,19 +337,41 @@ function startEndingCutscene(){
 const cutsceneQueue = [
   function() {
     cutsceneSay(
-      "GATSBY",
-      "You don’t understand!//...//You’re not going to take care of her anymore./Daisy’s leaving you.",
+      "TOM",
+      "*Even that’s a lie. She didn’t even know you were alive.*/Why--there’re things between Daisy and me that you’ll never know, things that neither of us can forget.",
       "none",
-      true,
+      50
+    )
+  },
+  function() {
+    cutsceneSay(
+      "GATSBY",
+      "You don’t understand!/You’re not going to take care of her anymore. Daisy’s leaving you.",
+      "none",
       50
     )
   },
   function() {
     cutsceneSay(
       "TOM",
-      "tom noises",
+      "She’s not leaving me!/Certainly not for a common swindler who’d have to steal the ring he put on her finger.",
       "none",
-      true,
+      50
+    )
+  },
+  function() {
+    cutsceneSay(
+      "GATSBY",
+      "........",
+      "none",
+      200
+    )
+  },
+  function() {
+    cutsceneSay(
+      "TOM",
+      "You two start on home, Daisy. In Mr. Gatsby’s car. Go on. He won’t annoy you./I think he realizes that his presumptuous little flirtation is over.",
+      "none",
       50
     )
   }
