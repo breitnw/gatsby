@@ -123,11 +123,13 @@ function gameStart() {
 
 function addEventListeners() {
   button.addEventListener('click', clickMoney);
+  /*
   document.addEventListener('keydown', function(event) {
     if (!onMainScreen && event.code == 'Space' && cutsceneAdvanceable) {
       advanceCutscene()
     }
   });
+  */
   document.addEventListener('click', () => {
     if (!onMainScreen && cutsceneAdvanceable) {
       advanceCutscene()
