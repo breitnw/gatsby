@@ -27,7 +27,7 @@ const tCutsceneEnterPrompt = document.getElementById("tCutsceneEnterPrompt")
 let money = 0;
 let incomePerClick = 3;
 const timestep = 17;
-let paused = false;
+let onMainScreen = true;
 
 let consoleLines = ["", "", "", ""];
 var consoleBlinkTimeout;
@@ -121,10 +121,15 @@ function gameStart() {
 }
 
 function addEventListeners() {
-  button.addEventListener("click", clickMoney);
+  button.addEventListener('click', clickMoney);
   document.addEventListener('keydown', function(event) {
     if (event.code == 'Space' && cutsceneAdvanceable) {
-      advanceCutscene(event.key)
+      advanceCutscene()
+    }
+  });
+  document.addEventListener('click', () => {
+    if (cutsceneAdvanceable) {
+      advanceCutscene()
     }
   });
 }
@@ -143,7 +148,7 @@ function updateui() {
 
 //automatic income
 function doIncome() {
-  if (!paused) {
+  if (onMainScreen) {
     money += getIncomePerTimeStep(timestep);
     updateui();
   }
@@ -190,13 +195,14 @@ function setMainScreen(value)
     dMainScreen.style.display = "block";
     dCutsceneScreen.style.display = "none";
     pageBody.style.backgroundColor = "white";
-    paused = false;
+    onMainScreen = true;
   } else {
     dMainScreen.style.display = "none";
     dCutsceneScreen.style.display = "block";
     pageBody.style.backgroundColor = "black";
-    paused = true;
+    onMainScreen = false;
   }
+  cutsceneAdvanceable = false;
 }
 
 //typing out text
@@ -259,7 +265,7 @@ function setEnterPromptVisibility(value) {
 
 //advance the cutscene when enter is pressed
 function advanceCutscene() {
-  setMainScreen(true)
+  setMainScreen(true);
 }
 
 
