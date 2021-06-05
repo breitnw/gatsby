@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset = utf-8>
+    <meta name = "viewport" content = "width=device-width">
+    <title>gatsby</title>
+    <link href = "style.css" rel = "stylesheet" type = "text/css" />
+  </head>
+
+
+  <body id = pageBody>
+    <!-- MAIN SCREEN -->
+    <div id = dMainScreen>
+      <div class = console>
+        <p>
+          <div class = consoleOld>
+            <span>> </span>
+            <span id = cLine3></span>
+            <br>
+            <span>> </span>
+            <span id = cLine2></span>
+            <br>
+            <span>> </span>
+            <span id = cLine1></span>
+            <br>
+          </div>
+
+          <div class = consoleNew>
+            <span>> </span>
+            <span id = cLine0></span>
+          </div>
+        </p>
+      </div>
+
+
+      <div id = leftColumn>
+        <h2>
+          $<span id = tCounter></span>
+        </h2>
+        <p>
+          Income per Second: <span id = tIncomePerSecond></span>
+        </p>
+        <img src=smiley.gif alt=j id = portrait>
+        <button onclick = startEndingCutscene()>START ENDING CUTSCENE</button> <!--TODO: DELETE LATER-->
+      </div>
+
+      <div id = middleColumn>
+        <h2>Default Job</h2>
+        <p>
+          <button id = btn>Button0</button><br>
+          $<span id = tIncomePerClick></span> per click
+        </p>
+        <hr>
+
+        <p>
+          <b><span id = tBusinessName0></b>
+          <br>
+          <button id = bBusinessBuy0>
+            $<span id = tBusinessCost0></span>
+          </button>
+          <span id = tBusinessCount0></span>
+          <br>
+          $<span id = tBusinessMPS0></span> / second
+        </p>
+        <hr>
+
+        <p>
+          <b><span id = tBusinessName1></b>
+          <br>
+          <button id = bBusinessBuy1>
+            $<span id = tBusinessCost1></span>
+          </button>
+          <span id = tBusinessCount1></span>
+          <br>
+          $<span id = tBusinessMPS1></span> / second
+        </p>
+        <hr>
+
+        <p>
+          <b><span id = tBusinessName2></b>
+          <br>
+          <button id = bBusinessBuy2>
+            $<span id = tBusinessCost2></span>
+          </button>
+          <span id = tBusinessCount2></span>
+          <br>
+          $<span id = tBusinessMPS2></span> / second
+        </p>
+      </div>
+    </div>
+
+    <!-- CUTSCENE SCREEN -->
+    <div id = dCutsceneScreen>
+      <p id = tCutsceneSpeaker></p>
+      <p id = tCutsceneText></p>
+
+      <p id = tCutsceneEnterPrompt>PRESS SPACE TO CONTINUE ></p>
+    </div>
+
+    <script src = script.js></script>
+  </body>
+</html>
