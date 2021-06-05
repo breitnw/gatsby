@@ -20,7 +20,7 @@ const tIncomePerClick = document.getElementById("tIncomePerClick");
 //cutscene screen
 const tCutsceneText = document.getElementById("tCutsceneText");
 const tCutsceneSpeaker = document.getElementById("tCutsceneSpeaker");
-const tCutsceneEnterPrompt = document.getElementById("tCutsceneEnterPrompt")
+const tCutsceneEnterPrompt = document.getElementById("tCutsceneEnterPrompt");
 
 
 //set global variables
@@ -33,6 +33,7 @@ let consoleLines = ["", "", "", ""];
 var consoleBlinkTimeout;
 
 let cutsceneAdvanceable = false;
+var promptTimeout;
 
 
 //purchases
@@ -123,12 +124,12 @@ function gameStart() {
 function addEventListeners() {
   button.addEventListener('click', clickMoney);
   document.addEventListener('keydown', function(event) {
-    if (event.code == 'Space' && cutsceneAdvanceable) {
+    if (!onMainScreen && event.code == 'Space' && cutsceneAdvanceable) {
       advanceCutscene()
     }
   });
   document.addEventListener('click', () => {
-    if (cutsceneAdvanceable) {
+    if (!onMainScreen && cutsceneAdvanceable) {
       advanceCutscene()
     }
   });
@@ -215,10 +216,10 @@ function typeCutsceneText(text, speed, punctuationDelay, brDelay) {
   tCutsceneText.innerHTML = text[0];
   text = text.substring(1);
 
-  let intervalVar = setInterval(() => {
+  let typingInterval = setInterval(() => {
     if (text.length < 1) {
-      setTimeout(() => {  setEnterPromptVisibility(true); }, 1000);
-      clearInterval(intervalVar);
+      promptTimeout = setTimeout(() => {  setEnterPromptVisibility(true); }, 1000);
+      clearInterval(typingInterval);
       cutsceneAdvanceable = true;
     }
     else {
@@ -250,13 +251,24 @@ function clearCutsceneText() {
   tCutsceneSpeaker.innerHTML = "";
 }
 
+//display a full piece of cutscene dialogue
+function cutsceneSay(speaker, text, expression, scrolling, textSpeed) {
+  setCutsceneSpeaker(speaker);
+  if (scrolling === false) {
+    setCutsceneText(text);
+  } else {
+    typeCutsceneText(text, textSpeed, 4, 1);
+  }
+}
+
+
 
 //prompt the user to press enter to continue
 function setEnterPromptVisibility(value) {
   if (value === true) {
-    //tCutsceneEnterPrompt.style.opacity = 1;
     tCutsceneEnterPrompt.style.animation = "blinkIn 2s linear infinite";
   } else {
+    clearTimeout(promptTimeout);
     tCutsceneEnterPrompt.style.opacity = 0;
     tCutsceneEnterPrompt.style.animation = "";
   }
@@ -265,8 +277,16 @@ function setEnterPromptVisibility(value) {
 
 //advance the cutscene when enter is pressed
 function advanceCutscene() {
-  setMainScreen(true);
+  setEnterPromptVisibility(false);
+  clearCutsceneText();
+  if (cutsceneQueue.length > 0) {
+    cutsceneQueue.shift()();
+  } else {
+    setMainScreen(true);
+  }
+
 }
+
 
 
 //start the ending cutscene
@@ -275,7 +295,28 @@ function startEndingCutscene(){
   setEnterPromptVisibility(false);
   clearCutsceneText();
   setTimeout(() => {
-    setCutsceneSpeaker("GATSBY");
-    typeCutsceneText("You don’t understand!//...//You’re not going to take care of her anymore./Daisy’s leaving you.", 50, 4, 1);
-  }, 1000)
+    advanceCutscene();
+  }, 1000);
 }
+
+//queue represents final cutscene dialogue in order it is shown
+const cutsceneQueue = [
+  function() {
+    cutsceneSay(
+      "GATSBY",
+      "You don’t understand!//...//You’re not going to take care of her anymore./Daisy’s leaving you.",
+      "none",
+      true,
+      50
+    )
+  },
+  function() {
+    cutsceneSay(
+      "TOM",
+      "tom noises",
+      "none",
+      true,
+      50
+    )
+  }
+]
