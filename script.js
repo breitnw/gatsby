@@ -6,8 +6,8 @@ const dCutsceneScreen = document.getElementById("dCutsceneScreen");
 
 //main screen
 const button = document.getElementById("btn");
-
-const tCounter = document.getElementById("tCounter");
+const tLove = document.getElementById("tLove");
+const tMoney = document.getElementById("tMoney");
 const tIncomePerSecond = document.getElementById("tIncomePerSecond");
 
 const cLine0 = document.getElementById("cLine0");
@@ -24,8 +24,9 @@ const tCutsceneEnterPrompt = document.getElementById("tCutsceneEnterPrompt");
 
 
 //set global variables
+let love = 100;
 let money = 0;
-let incomePerClick = 1;
+let incomePerClick = 0.50;
 const timestep = 17;
 let onMainScreen = true;
 
@@ -84,7 +85,7 @@ var business0 = new Business(
   "Business Associate",
   "Hire",
   10,
-  0.5,
+  0.3,
   0,
   1.2,
   "tBusinessName0",
@@ -97,8 +98,8 @@ var business0 = new Business(
 var business1 = new Business(
   "Corner Store",
   "Purchase",
-  100,
-  6,
+  50,
+  2,
   0,
   1.2,
   "tBusinessName1",
@@ -111,8 +112,8 @@ var business1 = new Business(
 var business2 = new Business(
   "Drug Store",
   "Purchase",
-  500,
-  40,
+  250,
+  15,
   0,
   1.2,
   "tBusinessName2",
@@ -125,8 +126,8 @@ var business2 = new Business(
 var shady0 = new Business(
   "Illegal Bar",
   "Purchase",
-  10000,
-  800,
+  1500,
+  100,
   0,
   1.2,
   "tShadyName0",
@@ -139,8 +140,8 @@ var shady0 = new Business(
 var shady1 = new Business(
   "Underground Gambling Joint",
   "Purchase",
-  100000,
-  10000,
+  5000,
+  400,
   0,
   1.2,
   "tShadyName1",
@@ -151,10 +152,10 @@ var shady1 = new Business(
 );
 
 var shady2 = new Business(
-  "Turn Drug Store into Alcohol Distribution Center",
+  "Turn Drug Store into Alcohol Distribution Facility",
   "Purchase",
-  1000000,
-  80,
+  50000,
+  5000,
   0,
   1.2,
   "tShadyName2",
@@ -184,7 +185,7 @@ var shady3 = new Business(
   "tShadyMPS3",
   "bShadyBuy3",
   function() {
-    moneyGained = 2000000;
+    moneyGained = shady3.cost * 2;
     money += moneyGained;
     updateConsole("“NEWS: EIGHT WHITE SOX PLAYERS ARE INDICTED ON CHARGE OF FIXING 1919 WORLD SERIES!” ...and $" + moneyGained + " has mysteriously appeared in your bank account.");
     shady3.tCost.innerHTML = "-----";
@@ -198,7 +199,7 @@ var shady3 = new Business(
 var daisy0 = new Business(
   "West Egg Mansion",
   "Purchase",
-  1000000,
+  2000000,
   0,
   0,
   1.2,
@@ -219,7 +220,7 @@ var daisy0 = new Business(
 var daisy1 = new Business(
   "Enormous Party",
   "Purchase",
-  100000,
+  250000,
   0,
   0,
   1.2,
@@ -236,7 +237,7 @@ var daisy1 = new Business(
 var daisy2 = new Business(
   "Fancy Car",
   "Purchase",
-  250000,
+  500000,
   0,
   0,
   1.2,
@@ -253,7 +254,7 @@ var daisy2 = new Business(
 var daisy3 = new Business(
   "Luxurious Yacht",
   "Purchase",
-  600000,
+  1200000,
   0,
   0,
   1.2,
@@ -270,7 +271,7 @@ var daisy3 = new Business(
 var daisy4 = new Business(
   "Ridiculously Extravagant Fruit Juicer",
   "Purchase",
-  1000000,
+  2500000,
   0,
   0,
   1,
@@ -328,15 +329,20 @@ function initializeui() {
 }
 
 function updateui() {
-  tCounter.innerHTML = truncMoney(money);
+  tLove.innerHTML = Math.trunc(love);
+  tMoney.innerHTML = truncMoney(money);
   tIncomePerSecond.innerHTML = truncMoney(getIncomePerSecond());
   purchases.forEach(b => b.updateButton());
 }
 
 function truncMoney(value) {
   if (value === 0) { return '0.00'}
-  str = '' + Math.trunc(value * 100);
-  return Math.trunc(value) + '.' + str.substring(str.length - 2);
+  cents = '' + Math.trunc(value * 100);
+  withCommas = '' + Math.trunc(value);
+  for (i = withCommas.length - 3; i >= 1; i-=3) {
+    withCommas = withCommas.substring(0, i) + ',' + withCommas.substring(i)
+  }
+  return withCommas + '.' + cents.substring(cents.length - 2);
 }
 
 
