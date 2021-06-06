@@ -25,7 +25,7 @@ const tCutsceneEnterPrompt = document.getElementById("tCutsceneEnterPrompt");
 
 //set global variables
 let money = 0;
-let incomePerClick = 3;
+let incomePerClick = 1;
 const timestep = 17;
 let onMainScreen = true;
 
@@ -38,41 +38,55 @@ var promptTimeout;
 
 //purchases
 class Business {
-  constructor(name, cost, moneyPerSecond, count, tName, tCost, tCount, tMPS, bBuy) {
+  constructor(name, buttonText, cost, moneyPerSecond, count, costIncrease, tName, tCost, tCount, tMPS, bBuy, specialBuyFunction, specialBuyCondition) {
     this.name = name;
     this.cost = cost;
     this.moneyPerSecond = moneyPerSecond;
     this.count = count;
 
+    this.specialBuyCondition = specialBuyCondition;
+
     this.tName = document.getElementById(tName);
     this.tCost = document.getElementById(tCost);
     this.tCount = document.getElementById(tCount);
-    this.tMPS = document.getElementById(tMPS);
+    //this.tMPS = document.getElementById(tMPS);
     this.bBuy = document.getElementById(bBuy);
 
     this.tName.innerHTML = this.name;
-    this.tCost.innerHTML = this.cost;
-    this.tCount.innerHTML = this.count;
-    this.tMPS.innerHTML = this.moneyPerSecond;
+    this.tCost.innerHTML = truncMoney(this.cost);
+    if (this.tCount != null) { this.tCount.innerHTML = this.count; }
+    this.bBuy.innerHTML = buttonText;
+    //this.tMPS.innerHTML = this.moneyPerSecond;
 
     this.buy = () => {
       money -= this.cost;
       this.count++;
-      this.tCount.innerHTML = this.count;
+      if (this.tCount != null) { this.tCount.innerHTML = this.count; }
+      this.cost *= costIncrease;
+      this.tCost.innerHTML = truncMoney(this.cost);
+      if (specialBuyFunction != null) { specialBuyFunction(); }
     }
+
     this.bBuy.addEventListener("click", this.buy);
   }
 
   updateButton() {
-    this.bBuy.disabled = (money < this.cost);
+    if (this.specialBuyCondition != null) {
+      this.bBuy.disabled = (money < this.cost) || (!this.specialBuyCondition());
+    } else {
+      this.bBuy.disabled = (money < this.cost)
+    }
   }
 }
 
+//business-related
 var business0 = new Business(
-  "name 0",
+  "Business Associate",
+  "Hire",
   10,
   0.5,
   0,
+  1.2,
   "tBusinessName0",
   "tBusinessCost0",
   "tBusinessCount0",
@@ -81,10 +95,12 @@ var business0 = new Business(
 );
 
 var business1 = new Business(
-  "name 1",
+  "Corner Store",
+  "Purchase",
   100,
   6,
   0,
+  1.2,
   "tBusinessName1",
   "tBusinessCost1",
   "tBusinessCount1",
@@ -93,10 +109,12 @@ var business1 = new Business(
 );
 
 var business2 = new Business(
-  "name 2",
-  1000,
-  80,
+  "Drug Store",
+  "Purchase",
+  500,
+  40,
   0,
+  1.2,
   "tBusinessName2",
   "tBusinessCost2",
   "tBusinessCount2",
@@ -104,10 +122,177 @@ var business2 = new Business(
   "bBusinessBuy2"
 );
 
+var shady0 = new Business(
+  "Illegal Bar",
+  "Purchase",
+  10000,
+  800,
+  0,
+  1.2,
+  "tShadyName0",
+  "tShadyCost0",
+  "tShadyCount0",
+  "tShadyMPS0",
+  "bShadyBuy0"
+);
+
+var shady1 = new Business(
+  "Underground Gambling Joint",
+  "Purchase",
+  100000,
+  10000,
+  0,
+  1.2,
+  "tShadyName1",
+  "tShadyCost1",
+  "tShadyCount1",
+  "tShadyMPS1",
+  "bShadyBuy1"
+);
+
+var shady2 = new Business(
+  "Turn Drug Store into Alcohol Distribution Center",
+  "Purchase",
+  1000000,
+  80,
+  0,
+  1.2,
+  "tShadyName2",
+  "tShadyCost2",
+  "tShadyCount2",
+  "tShadyMPS2",
+  "bShadyBuy2",
+  function() {
+    business2.count--;
+    business2.tCount.innerHTML = business2.count;
+  },
+  function() {
+    return business2.count > 0;
+  }
+);
+
+var shady3 = new Business(
+  "?????????",
+  "Purchase",
+  1000000,
+  0,
+  0,
+  1,
+  "tShadyName3",
+  "tShadyCost3",
+  "tShadyCount3",
+  "tShadyMPS3",
+  "bShadyBuy3",
+  function() {
+    moneyGained = 2000000;
+    money += moneyGained;
+    updateConsole("“NEWS: EIGHT WHITE SOX PLAYERS ARE INDICTED ON CHARGE OF FIXING 1919 WORLD SERIES!” ...and $" + moneyGained + " has mysteriously appeared in your bank account.");
+    shady3.tCost.innerHTML = "-----";
+  },
+  function() {
+    return this.count === 0;
+  }
+);
+
+//Daisy-related
+var daisy0 = new Business(
+  "West Egg Mansion",
+  "Purchase",
+  1000000,
+  0,
+  0,
+  1.2,
+  "tDaisyName0",
+  "tDaisyCost0",
+  "tDaisyCount0",
+  "tDaisyMPS0",
+  "bDaisyBuy0",
+  function() {
+    updateConsole("daisy purchase");
+    daisy0.tCost.innerHTML = "-----";
+  },
+  function() {
+    return this.count === 0;
+  }
+);
+
+var daisy1 = new Business(
+  "Enormous Party",
+  "Purchase",
+  100000,
+  0,
+  0,
+  1.2,
+  "tDaisyName1",
+  "tDaisyCost1",
+  "tDaisyCount1",
+  "tDaisyMPS1",
+  "bDaisyBuy1",
+  function() {
+    updateConsole("daisy purchase");
+  }
+);
+
+var daisy2 = new Business(
+  "Fancy Car",
+  "Purchase",
+  250000,
+  0,
+  0,
+  1.2,
+  "tDaisyName2",
+  "tDaisyCost2",
+  "tDaisyCount2",
+  "tDaisyMPS2",
+  "bDaisyBuy2",
+  function() {
+    updateConsole("daisy purchase");
+  }
+);
+
+var daisy3 = new Business(
+  "Luxurious Yacht",
+  "Purchase",
+  600000,
+  0,
+  0,
+  1.2,
+  "tDaisyName3",
+  "tDaisyCost3",
+  "tDaisyCount3",
+  "tDaisyMPS3",
+  "bDaisyBuy3",
+  function() {
+    updateConsole("daisy purchase");
+  }
+);
+
+var daisy4 = new Business(
+  "Ridiculously Extravagant Fruit Juicer",
+  "Purchase",
+  1000000,
+  0,
+  0,
+  1,
+  "tDaisyName4",
+  "tDaisyCost4",
+  "tDaisyCount4",
+  "tDaisyMPS4",
+  "bDaisyBuy4",
+  function() {
+    updateConsole("daisy purchase");
+    daisy4.tCost.innerHTML = "-----";
+  },
+  function() {
+    return this.count === 0;
+  }
+);
 
 
-var businesses = [business0, business1, business2];
+var purchases = [business0, business1, business2, shady0, shady1, shady2, shady3, daisy0, daisy1, daisy2, daisy3, daisy4];
 
+
+//start the game
 setMainScreen(true);
 gameStart();
 
@@ -138,14 +323,20 @@ function addEventListeners() {
 }
 
 function initializeui() {
-  tIncomePerClick.innerHTML = incomePerClick;
+  tIncomePerClick.innerHTML = truncMoney(incomePerClick);
   updateui();
 }
 
 function updateui() {
-  tCounter.innerHTML = Math.trunc(money);
-  tIncomePerSecond.innerHTML = getIncomePerSecond();
-  businesses.forEach(b => b.updateButton());
+  tCounter.innerHTML = truncMoney(money);
+  tIncomePerSecond.innerHTML = truncMoney(getIncomePerSecond());
+  purchases.forEach(b => b.updateButton());
+}
+
+function truncMoney(value) {
+  if (value === 0) { return '0.00'}
+  str = '' + Math.trunc(value * 100);
+  return Math.trunc(value) + '.' + str.substring(str.length - 2);
 }
 
 
@@ -160,7 +351,7 @@ function doIncome() {
 function getIncomePerTimeStep(step) { return getIncomePerSecond() * step / 1000; }
 
 function getIncomePerSecond() {
-  return businesses.reduce((sum, current) => sum + current.count * current.moneyPerSecond, 0);
+  return purchases.reduce((sum, current) => sum + current.count * current.moneyPerSecond, 0);
 }
 
 
@@ -168,7 +359,7 @@ function getIncomePerSecond() {
 function clickMoney(){
   money += incomePerClick;
   updateui();
-  updateConsole(money + " dolar");
+  updateConsole(truncMoney(money) + " dolar");
 }
 
 
@@ -362,7 +553,7 @@ const cutsceneQueue = [
   function() {
     cutsceneSay(
       "GATSBY",
-      "........",
+      ".....",
       "none",
       200
     )

@@ -22,6 +22,7 @@
   width: inherit;
 }
 
+
 .console {
   background-color: black;
   font-family: monospace;
@@ -71,6 +72,9 @@
   50% {
     opacity: 0.5;
   }
+}
+#cutscenePortrait {
+  width: 50%;
 }
 
 button {

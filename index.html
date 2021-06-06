@@ -39,59 +39,142 @@
           $<span id = tCounter></span>
         </h2>
         <p>
-          Income per Second: <span id = tIncomePerSecond></span>
+          Income per Second: $<span id = tIncomePerSecond></span> / s
         </p>
         <img src=smiley.gif alt=j id = portrait>
+        <p>
+          <button id = btn>Menial Labor</button><br>
+          + $<span id = tIncomePerClick></span>
+        </p>
         <button onclick = startEndingCutscene()>START ENDING CUTSCENE</button> <!--TODO: DELETE LATER-->
       </div>
 
+
       <div id = middleColumn>
-        <h2>Default Job</h2>
-        <p>
-          <button id = btn>Button0</button><br>
-          $<span id = tIncomePerClick></span> per click
-        </p>
-        <hr>
+        <h3>Business Interests<hr></h3>
 
         <p>
           <b><span id = tBusinessName0></b>
           <br>
-          <button id = bBusinessBuy0>
-            $<span id = tBusinessCost0></span>
-          </button>
+          <button id = bBusinessBuy0></button>
           <span id = tBusinessCount0></span>
           <br>
-          $<span id = tBusinessMPS0></span> / second
+          Cost: $<span id = tBusinessCost0></span>
+          <!--$<span id = tBusinessMPS0></span> / second-->
         </p>
-        <hr>
 
         <p>
           <b><span id = tBusinessName1></b>
           <br>
-          <button id = bBusinessBuy1>
-            $<span id = tBusinessCost1></span>
-          </button>
+          <button id = bBusinessBuy1></button>
           <span id = tBusinessCount1></span>
           <br>
-          $<span id = tBusinessMPS1></span> / second
+          Cost: $<span id = tBusinessCost1></span>
+          <!--$<span id = tBusinessMPS1></span> / second-->
         </p>
-        <hr>
 
         <p>
           <b><span id = tBusinessName2></b>
           <br>
-          <button id = bBusinessBuy2>
-            $<span id = tBusinessCost2></span>
-          </button>
+          <button id = bBusinessBuy2></button>
           <span id = tBusinessCount2></span>
           <br>
-          $<span id = tBusinessMPS2></span> / second
+          Cost: $<span id = tBusinessCost2></span>
+          <!--$<span id = tBusinessMPS2></span> / second-->
+        </p>
+
+        <h3>Shady Dealings<hr></h3>
+
+
+        <p>
+          <b><span id = tShadyName0></b>
+          <br>
+          <button id = bShadyBuy0></button>
+          <span id = tShadyCount0></span>
+          <br>
+          Cost: $<span id = tShadyCost0></span>
+        </p>
+
+        <p>
+          <b><span id = tShadyName1></b>
+          <br>
+          <button id = bShadyBuy1></button>
+          <span id = tShadyCount1></span>
+          <br>
+          Cost: $<span id = tShadyCost1></span>
+        </p>
+
+        <p>
+          <b><span id = tShadyName2></b>
+          <br>
+          <button id = bShadyBuy2></button>
+          <span id = tShadyCount2></span>
+          <br>
+          Cost: $<span id = tShadyCost2></span>, 1 Drug Store
+        </p>
+
+        <p>
+          <b><span id = tShadyName3></b>
+          <br>
+          <button id = bShadyBuy3></button>
+          <br>
+          Cost: $<span id = tShadyCost3></span>
         </p>
       </div>
+
+
+      <div id = rightColumn>
+        <h3>Reclaiming Daisy's Love<hr></h3>
+
+        <p>
+          <b><span id = tDaisyName0></b>
+          <br>
+          <button id = bDaisyBuy0></button>
+          <br>
+          Cost: $<span id = tDaisyCost0></span>
+        </p>
+
+        <p>
+          <b><span id = tDaisyName1></b>
+          <br>
+          <button id = bDaisyBuy1></button>
+          <span id = tDaisyCount1></span>
+          <br>
+          Cost: $<span id = tDaisyCost1></span>
+        </p>
+
+        <p>
+          <b><span id = tDaisyName2></b>
+          <br>
+          <button id = bDaisyBuy2></button>
+          <span id = tDaisyCount2></span>
+          <br>
+          Cost: $<span id = tDaisyCost2></span>
+        </p>
+
+        <p>
+          <b><span id = tDaisyName3></b>
+          <br>
+          <button id = bDaisyBuy3></button>
+          <span id = tDaisyCount3></span>
+          <br>
+          Cost: $<span id = tDaisyCost3></span>
+        </p>
+
+        <p>
+          <b><span id = tDaisyName4></b>
+          <br>
+          <button id = bDaisyBuy4></button>
+          <br>
+          Cost: $<span id = tDaisyCost4></span>
+        </p>
+      </div>
+
     </div>
 
     <!-- CUTSCENE SCREEN -->
     <div id = dCutsceneScreen>
+      <img src=smiley.gif alt=j id = cutscenePortrait>
       <p id = tCutsceneSpeaker></p>
       <p id = tCutsceneText></p>
 
