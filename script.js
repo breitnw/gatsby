@@ -87,7 +87,7 @@ var business0 = new Business(
   10,
   0.3,
   0,
-  1.2,
+  1.1,
   "tBusinessName0",
   "tBusinessCost0",
   "tBusinessCount0",
@@ -98,10 +98,10 @@ var business0 = new Business(
 var business1 = new Business(
   "Corner Store",
   "Purchase",
-  50,
-  2,
-  0,
+  30,
   1.2,
+  0,
+  1.1,
   "tBusinessName1",
   "tBusinessCost1",
   "tBusinessCount1",
@@ -112,10 +112,10 @@ var business1 = new Business(
 var business2 = new Business(
   "Drug Store",
   "Purchase",
-  250,
-  15,
+  100,
+  4,
   0,
-  1.2,
+  1.1,
   "tBusinessName2",
   "tBusinessCost2",
   "tBusinessCount2",
@@ -126,10 +126,10 @@ var business2 = new Business(
 var shady0 = new Business(
   "Illegal Bar",
   "Purchase",
-  1500,
-  100,
+  800,
+  38,
   0,
-  1.2,
+  1.1,
   "tShadyName0",
   "tShadyCost0",
   "tShadyCount0",
@@ -140,10 +140,10 @@ var shady0 = new Business(
 var shady1 = new Business(
   "Underground Gambling Joint",
   "Purchase",
-  5000,
-  400,
+  3000,
+  171,
   0,
-  1.2,
+  1.1,
   "tShadyName1",
   "tShadyCost1",
   "tShadyCount1",
@@ -154,10 +154,10 @@ var shady1 = new Business(
 var shady2 = new Business(
   "Turn Drug Store into Alcohol Distribution Facility",
   "Purchase",
-  50000,
-  5000,
+  15000,
+  1000,
   0,
-  1.2,
+  1.1,
   "tShadyName2",
   "tShadyCost2",
   "tShadyCount2",
@@ -175,7 +175,7 @@ var shady2 = new Business(
 var shady3 = new Business(
   "?????????",
   "Purchase",
-  1000000,
+  200000,
   0,
   0,
   1,
@@ -187,7 +187,7 @@ var shady3 = new Business(
   function() {
     moneyGained = shady3.cost * 2;
     money += moneyGained;
-    updateConsole("“NEWS: EIGHT WHITE SOX PLAYERS ARE INDICTED ON CHARGE OF FIXING 1919 WORLD SERIES!” ...and $" + moneyGained + " has mysteriously appeared in your bank account.");
+    updateConsole("“NEWS: EIGHT WHITE SOX PLAYERS ARE INDICTED ON CHARGE OF FIXING 1919 WORLD SERIES!” ...and $" + truncMoney(moneyGained) + " has mysteriously appeared in your bank account.");
     shady3.tCost.innerHTML = "-----";
   },
   function() {
@@ -199,10 +199,10 @@ var shady3 = new Business(
 var daisy0 = new Business(
   "West Egg Mansion",
   "Purchase",
-  2000000,
+  500000,
   0,
   0,
-  1.2,
+  1,
   "tDaisyName0",
   "tDaisyCost0",
   "tDaisyCount0",
@@ -220,10 +220,10 @@ var daisy0 = new Business(
 var daisy1 = new Business(
   "Enormous Party",
   "Purchase",
-  250000,
+  100000,
   0,
   0,
-  1.2,
+  1.1,
   "tDaisyName1",
   "tDaisyCost1",
   "tDaisyCount1",
@@ -237,10 +237,10 @@ var daisy1 = new Business(
 var daisy2 = new Business(
   "Fancy Car",
   "Purchase",
-  500000,
+  200000,
   0,
   0,
-  1.2,
+  1.1,
   "tDaisyName2",
   "tDaisyCost2",
   "tDaisyCount2",
@@ -254,10 +254,10 @@ var daisy2 = new Business(
 var daisy3 = new Business(
   "Luxurious Yacht",
   "Purchase",
-  1200000,
+  350000,
   0,
   0,
-  1.2,
+  1.1,
   "tDaisyName3",
   "tDaisyCost3",
   "tDaisyCount3",
@@ -271,10 +271,10 @@ var daisy3 = new Business(
 var daisy4 = new Business(
   "Ridiculously Extravagant Fruit Juicer",
   "Purchase",
-  2500000,
+  600000,
   0,
   0,
-  1,
+  1.1,
   "tDaisyName4",
   "tDaisyCost4",
   "tDaisyCount4",
@@ -282,11 +282,7 @@ var daisy4 = new Business(
   "bDaisyBuy4",
   function() {
     updateConsole("daisy purchase");
-    daisy4.tCost.innerHTML = "-----";
   },
-  function() {
-    return this.count === 0;
-  }
 );
 
 
@@ -561,7 +557,7 @@ const cutsceneQueue = [
       "GATSBY",
       ".....",
       "none",
-      200
+      150
     )
   },
   function() {
