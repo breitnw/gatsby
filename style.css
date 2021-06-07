@@ -1,4 +1,8 @@
 
+.hidden {
+  display: none;
+}
+
 #columns {
   margin-top: 120px;
 }
@@ -26,6 +30,17 @@
 h3 {
   line-height: 60%;
 }
+.flashAnimation {
+    animation: flash-animation 0.3s linear;
+}
+@keyframes flash-animation {
+    0% { opacity: 1; }
+    25%   { opacity: 0; }
+    50% { opacity: 1; }
+    75%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 
 .console {
   z-index: 10;
@@ -47,6 +62,9 @@ h3 {
 }
 .consoleNew {
   color: white;
+}
+.blinkAnimation{
+  animation: blink 1s linear infinite;
 }
 @keyframes blink {
   50% {
@@ -80,6 +98,10 @@ h3 {
   right: 20px;
   font-family: "Georgia";
   letter-spacing: 3px;
+  opacity: 0;
+}
+.blinkInAnimation{
+  animation: blinkIn 2s linear infinite;
 }
 @keyframes blinkIn {
   50% {
@@ -89,6 +111,7 @@ h3 {
 #cutscenePortrait {
   width: 50%;
 }
+
 
 button {
    border: 1px solid #1a1a1a;

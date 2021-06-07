@@ -10,6 +10,9 @@ const tLove = document.getElementById("tLove");
 const tMoney = document.getElementById("tMoney");
 const tIncomePerSecond = document.getElementById("tIncomePerSecond");
 
+const dShady = document.getElementById("dShady");
+const dHousePurchased = document.getElementById("dHousePurchased")
+
 const cLine0 = document.getElementById("cLine0");
 const cLine1 = document.getElementById("cLine1");
 const cLine2 = document.getElementById("cLine2");
@@ -45,7 +48,7 @@ var promptTimeout;
 
 //purchases
 class Purchase {
-  constructor(name, buttonText, cost, moneyPerSecond, count, costIncrease, minLove, tName, tCost, tCount, tMPS, bBuy, specialBuyFunction, specialBuyCondition) {
+  constructor(name, buttonText, cost, moneyPerSecond, count, costIncrease, minLove, tName, tCost, tCount, bBuy, specialBuyFunction, specialBuyCondition) {
     this.name = name;
     this.cost = cost;
     this.moneyPerSecond = moneyPerSecond;
@@ -56,14 +59,12 @@ class Purchase {
     this.tName = document.getElementById(tName);
     this.tCost = document.getElementById(tCost);
     this.tCount = document.getElementById(tCount);
-    //this.tMPS = document.getElementById(tMPS);
     this.bBuy = document.getElementById(bBuy);
 
     this.tName.innerHTML = this.name;
     this.tCost.innerHTML = truncMoney(this.cost);
     if (this.tCount != null) { this.tCount.innerHTML = this.count; }
     this.bBuy.innerHTML = buttonText;
-    //this.tMPS.innerHTML = this.moneyPerSecond;
 
     this.buy = () => {
       money -= this.cost;
@@ -99,7 +100,6 @@ var business0 = new Purchase(
   "tBusinessName0",
   "tBusinessCost0",
   "tBusinessCount0",
-  "tBusinessMPS0",
   "bBusinessBuy0"
 );
 
@@ -114,7 +114,6 @@ var business1 = new Purchase(
   "tBusinessName1",
   "tBusinessCost1",
   "tBusinessCount1",
-  "tBusinessMPS1",
   "bBusinessBuy1"
 );
 
@@ -129,7 +128,6 @@ var business2 = new Purchase(
   "tBusinessName2",
   "tBusinessCost2",
   "tBusinessCount2",
-  "tBusinessMPS2",
   "bBusinessBuy2"
 );
 
@@ -144,7 +142,6 @@ var shady0 = new Purchase(
   "tShadyName0",
   "tShadyCost0",
   "tShadyCount0",
-  "tShadyMPS0",
   "bShadyBuy0"
 );
 
@@ -159,7 +156,6 @@ var shady1 = new Purchase(
   "tShadyName1",
   "tShadyCost1",
   "tShadyCount1",
-  "tShadyMPS1",
   "bShadyBuy1"
 );
 
@@ -174,7 +170,6 @@ var shady2 = new Purchase(
   "tShadyName2",
   "tShadyCost2",
   "tShadyCount2",
-  "tShadyMPS2",
   "bShadyBuy2",
   function() {
     business2.count--;
@@ -196,7 +191,6 @@ var shady3 = new Purchase(
   "tShadyName3",
   "tShadyCost3",
   "tShadyCount3",
-  "tShadyMPS3",
   "bShadyBuy3",
   function() {
     moneyGained = shady3.cost * 2;
@@ -221,7 +215,6 @@ var daisy0 = new Purchase(
   "tDaisyName0",
   "tDaisyCost0",
   "tDaisyCount0",
-  "tDaisyMPS0",
   "bDaisyBuy0",
   function() {
     updateConsole("daisy purchase");
@@ -233,7 +226,7 @@ var daisy0 = new Purchase(
 );
 
 var daisy1 = new Purchase(
-  "Enormous Party",
+  "Fancy Car",
   "Purchase",
   100000,
   0,
@@ -243,7 +236,6 @@ var daisy1 = new Purchase(
   "tDaisyName1",
   "tDaisyCost1",
   "tDaisyCount1",
-  "tDaisyMPS1",
   "bDaisyBuy1",
   function() {
     updateConsole("daisy purchase");
@@ -251,7 +243,7 @@ var daisy1 = new Purchase(
 );
 
 var daisy2 = new Purchase(
-  "Fancy Car",
+  "Luxurious Yacht",
   "Purchase",
   200000,
   0,
@@ -261,7 +253,6 @@ var daisy2 = new Purchase(
   "tDaisyName2",
   "tDaisyCost2",
   "tDaisyCount2",
-  "tDaisyMPS2",
   "bDaisyBuy2",
   function() {
     updateConsole("daisy purchase");
@@ -269,7 +260,7 @@ var daisy2 = new Purchase(
 );
 
 var daisy3 = new Purchase(
-  "Luxurious Yacht",
+  "Enormous Party",
   "Purchase",
   350000,
   0,
@@ -279,7 +270,6 @@ var daisy3 = new Purchase(
   "tDaisyName3",
   "tDaisyCost3",
   "tDaisyCount3",
-  "tDaisyMPS3",
   "bDaisyBuy3",
   function() {
     updateConsole("daisy purchase");
@@ -297,7 +287,6 @@ var daisy4 = new Purchase(
   "tDaisyName4",
   "tDaisyCost4",
   "tDaisyCount4",
-  "tDaisyMPS4",
   "bDaisyBuy4",
   function() {
     updateConsole("daisy purchase");
@@ -339,6 +328,8 @@ function addEventListeners() {
 }
 
 function initializeui() {
+  dShady.classList.add("hidden");
+  dHousePurchased.classList.add("hidden");
   tIncomePerClick.innerHTML = truncMoney(incomePerClick);
   updateui();
 }
@@ -399,7 +390,22 @@ function setMinLove(value) {
 function clickMoney(){
   money += incomePerClick;
   updateui();
-  //updateConsole(truncMoney(money) + " dolar");
+  updateConsole(truncMoney(money) + " dolar");
+}
+
+
+//major events
+function eWolfshiem() {
+  updateConsole("WOLFSHIEM EVENT");
+  revealDiv(dShady)
+}
+function eHouse() {
+  updateConsole("HOUSE PURCHASED EVENT")
+  revealDiv(dHousePurchased);
+}
+function revealDiv(div) {
+  div.classList.remove('hidden');
+  div.classList.add('flashAnimation')
 }
 
 
@@ -412,9 +418,9 @@ function updateConsole(newLine)
   cLine1.innerHTML = consoleLines[1];
   cLine2.innerHTML = consoleLines[2];
   cLine3.innerHTML = consoleLines[3];
-  cLine0.style.animation = "blink 1s linear infinite";
+  cLine0.classList.add("blinkAnimation");
   clearTimeout(consoleBlinkTimeout);
-  consoleBlinkTimeout = setTimeout(() => {  cLine0.style.animation = ""; }, 3000);
+  consoleBlinkTimeout = setTimeout(() => {  cLine0.classList.remove("blinkAnimation"); }, 3000);
 
 }
 
@@ -426,13 +432,13 @@ function updateConsole(newLine)
 function setMainScreen(value)
 {
   if (value === true) {
-    dMainScreen.style.display = "block";
-    dCutsceneScreen.style.display = "none";
+    dMainScreen.classList.remove("hidden");
+    dCutsceneScreen.classList.add("hidden");
     pageBody.style.backgroundColor = "white";
     onMainScreen = true;
   } else {
-    dMainScreen.style.display = "none";
-    dCutsceneScreen.style.display = "block";
+    dMainScreen.classList.add("hidden");
+    dCutsceneScreen.classList.remove("hidden");
     pageBody.style.backgroundColor = "black";
     onMainScreen = false;
   }
@@ -530,11 +536,10 @@ function cutsceneSay(speaker, text, expression, textSpeed) {
 //prompt the user to press enter to continue
 function setEnterPromptVisibility(value) {
   if (value === true) {
-    tCutsceneEnterPrompt.style.animation = "blinkIn 2s linear infinite";
+    tCutsceneEnterPrompt.classList.add("blinkInAnimation");
   } else {
     clearTimeout(promptTimeout);
-    tCutsceneEnterPrompt.style.opacity = 0;
-    tCutsceneEnterPrompt.style.animation = "";
+    tCutsceneEnterPrompt.classList.remove("blinkInAnimation");
   }
 }
 
