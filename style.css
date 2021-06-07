@@ -1,3 +1,7 @@
+
+#columns {
+  margin-top: 120px;
+}
 #leftColumn {
   margin-top: 10px;
   float: left;
@@ -20,21 +24,26 @@
   width: inherit;
 }
 
-
 .console {
+  z-index: 10;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  right: 10px;
   background-color: black;
+  border-style: solid;
+  border-width: thick;
+  border-color: white;
   font-family: monospace;
   line-height: 150%;
   padding-left: 15px;
   padding-right: 15px;
 }
 .consoleOld {
-  padding-top: 8px;
   color: gray;
 }
 .consoleNew {
   color: white;
-  padding-bottom: 8px;
 }
 @keyframes blink {
   50% {
