@@ -48,10 +48,20 @@
             <button id = btn>Menial Labor</button><br>
             +$<span id = tIncomePerClick></span>
           </p>
-          <button onclick = startEndingCutscene()>START ENDING CUTSCENE</button> <!--TODO: DELETE LATER--><br>
-          <button onclick = eWolfshiem()>TRIGGER WOLFSHIEM EVENT</button> <!--TODO: DELETE LATER--><br>
-          <button onclick = eHouse()>TRIGGER HOUSE BOUGHT EVENT</button> <!--TODO: DELETE LATER-->
+          <!--CHEAT BUTTONS-->
+          <!--TODO: DELETE LATER-->
+          <button onclick = startEndingCutscene()>START ENDING CUTSCENE</button><br>
+          <button onclick = eWolfshiem()>TRIGGER WOLFSHIEM EVENT</button><br>
+          <button onclick = eHouse()>TRIGGER HOUSE BOUGHT EVENT</button><br>
+          <button onclick = eFinal()>TRIGGER FINAL DAISY EVENT</button><br>
+          <button onclick = addMoney(10)>+10</button>
+          <button onclick = addMoney(100)>+100</button>
+          <button onclick = addMoney(1000)>+1000</button>
+          <button onclick = addMoney(10000)>+10000</button>
+          <button onclick = addMoney(100000)>+100000</button>
+          <button onclick = subLove(5)>-5%</button>
         </div>
+
 
 
         <div id = middleColumn>
@@ -83,6 +93,7 @@
             <br>
             Cost: $<span id = tBusinessCost2></span>
           </p>
+
 
           <div id = dShady>
             <h3>Shady Dealings<hr></h3>
@@ -125,6 +136,7 @@
         </div>
 
 
+
         <div id = rightColumn>
           <h3>Reclaiming Daisy's Love<hr></h3>
 
@@ -137,6 +149,7 @@
             <br>
             Chance of +20% LOVE
           </p>
+
 
           <div id = dHousePurchased>
             <p>
@@ -181,6 +194,20 @@
               Cost: $<span id = tDaisyCost4></span>
               <br>
               Chance of +60% LOVE
+            </p>
+          </div>
+
+
+          <div id = dFinal>
+            <p>
+              <b><span id = tDaisyName5></b>
+              <br>
+              <button id = bDaisyBuy5></button>
+              <span id = tDaisyCount5></span>
+              <br>
+              Cost: $<span id = tDaisyCost5></span>
+              <br>
+              Chance of +???% LOVE
             </p>
           </div>
         </div>

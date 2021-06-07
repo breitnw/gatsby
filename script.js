@@ -33,11 +33,13 @@ let prevInvLove = 100;
 setMinLove(100);
 
 let money = 0;
+let totalAssets = 0;
 let incomePerClick = 0.50;
 const timestep = 17;
 
 let onMainScreen = true;
 let paused = false;
+let finalEventTriggered = false;
 
 let consoleLines = ["", "", "", ""];
 var consoleBlinkTimeout;
@@ -81,9 +83,9 @@ class Purchase {
 
   updateButton() {
     if (this.specialBuyCondition != null) {
-      this.bBuy.disabled = (money < this.cost) || (!this.specialBuyCondition());
+      this.bBuy.disabled = (money < this.cost) || (!this.specialBuyCondition()) || (finalEventTriggered && this.cost > 0);
     } else {
-      this.bBuy.disabled = (money < this.cost)
+      this.bBuy.disabled = (money < this.cost) || (finalEventTriggered && this.cost > 0);
     }
   }
 }
@@ -100,7 +102,7 @@ var business0 = new Purchase(
   "tBusinessName0",
   "tBusinessCost0",
   "tBusinessCount0",
-  "bBusinessBuy0"
+  "bBusinessBuy0",
 );
 
 var business1 = new Purchase(
@@ -128,7 +130,12 @@ var business2 = new Purchase(
   "tBusinessName2",
   "tBusinessCost2",
   "tBusinessCount2",
-  "bBusinessBuy2"
+  "bBusinessBuy2",
+  function() {
+    if (business2.count === 1) {
+      setTimeout(() => { eWolfshiem() }, 25000);
+    }
+  }
 );
 
 var shady0 = new Purchase(
@@ -217,7 +224,7 @@ var daisy0 = new Purchase(
   "tDaisyCount0",
   "bDaisyBuy0",
   function() {
-    updateConsole("daisy purchase");
+    eHouse();
     daisy0.tCost.innerHTML = "-----";
   },
   function() {
@@ -266,7 +273,7 @@ var daisy3 = new Purchase(
   0,
   0,
   1.1,
-  1,
+  3,
   "tDaisyName3",
   "tDaisyCost3",
   "tDaisyCount3",
@@ -283,7 +290,7 @@ var daisy4 = new Purchase(
   0,
   0,
   1.1,
-  0,
+  1,
   "tDaisyName4",
   "tDaisyCost4",
   "tDaisyCount4",
@@ -293,8 +300,25 @@ var daisy4 = new Purchase(
   },
 );
 
+var daisy5 = new Purchase(
+  "Invite Daisy for Tea",
+  "Purchase",
+  0,
+  0,
+  0,
+  1,
+  1,
+  "tDaisyName5",
+  "tDaisyCost5",
+  "tDaisyCount5",
+  "bDaisyBuy5",
+  function() {
+    updateConsole("daisy purchase");
+  },
+);
 
-var purchases = [business0, business1, business2, shady0, shady1, shady2, shady3, daisy0, daisy1, daisy2, daisy3, daisy4];
+
+var purchases = [business0, business1, business2, shady0, shady1, shady2, shady3, daisy0, daisy1, daisy2, daisy3, daisy4, daisy5];
 
 
 //start the game
@@ -330,6 +354,7 @@ function addEventListeners() {
 function initializeui() {
   dShady.classList.add("hidden");
   dHousePurchased.classList.add("hidden");
+  dFinal.classList.add("hidden");
   tIncomePerClick.innerHTML = truncMoney(incomePerClick);
   updateui();
 }
@@ -338,7 +363,7 @@ function updateui() {
   tLove.innerHTML = Math.trunc(101 - invLove);
   tMoney.innerHTML = truncMoney(money);
   tIncomePerSecond.innerHTML = truncMoney(getIncomePerSecond());
-  purchases.forEach(b => b.updateButton());
+  purchases.forEach(p => p.updateButton());
 }
 
 function truncMoney(value) {
@@ -357,6 +382,11 @@ function doTimeStep() {
   if (onMainScreen && !paused) {
     money += getIncomePerTimeStep(timestep);
     invLove += getDeltaInvLove(timestep);
+    if (invLove >= 99.5) {
+      eFinal();
+      paused = true;
+    }
+    //updateConsole(invLove);
     updateui();
   }
 }
@@ -374,7 +404,6 @@ function getDeltaInvLove(step) {
   m = 101 - minLove - prevInvLove; //101 accounts for truncation
   invLoveDiff = invLove - prevInvLove
   lovePerSec = k * invLoveDiff * (1 - invLoveDiff / m);
-  //updateConsole(lovePerSec)
   return lovePerSec * (step / 1000);
 }
 
@@ -387,10 +416,20 @@ function setMinLove(value) {
 
 
 //button events
-function clickMoney(){
+function clickMoney() {
   money += incomePerClick;
   updateui();
-  updateConsole(truncMoney(money) + " dolar");
+  //updateConsole(truncMoney(money) + " dolar");
+}
+
+//TODO: delete later
+function addMoney(val) {
+  money += val;
+}
+
+//TODO: delete later
+function subLove(val) {
+  invLove += val;
 }
 
 
@@ -402,6 +441,11 @@ function eWolfshiem() {
 function eHouse() {
   updateConsole("HOUSE PURCHASED EVENT")
   revealDiv(dHousePurchased);
+}
+function eFinal() {
+  updateConsole("FINAL DAISY EVENT")
+  revealDiv(dFinal);
+  finalEventTriggered = true;
 }
 function revealDiv(div) {
   div.classList.remove('hidden');
