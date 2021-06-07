@@ -23,6 +23,9 @@
 #portrait {
   width: inherit;
 }
+h3 {
+  line-height: 60%;
+}
 
 .console {
   z-index: 10;
@@ -62,8 +65,10 @@
 #tCutsceneSpeaker {
   font-family: "Georgia";
   letter-spacing: 3px;
+  line-height: 100%
 }
 #tCutsceneText {
+  margin-top: 0;
   letter-spacing: 3px;
   font-size: 30px;
   font-variant-ligatures: none;

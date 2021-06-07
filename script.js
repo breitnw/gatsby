@@ -24,11 +24,17 @@ const tCutsceneEnterPrompt = document.getElementById("tCutsceneEnterPrompt");
 
 
 //set global variables
-let love = 100;
+let invLove = 0;
+let minLove = 100;
+let prevInvLove = 100;
+setMinLove(100);
+
 let money = 0;
 let incomePerClick = 0.50;
 const timestep = 17;
+
 let onMainScreen = true;
+let paused = false;
 
 let consoleLines = ["", "", "", ""];
 var consoleBlinkTimeout;
@@ -38,8 +44,8 @@ var promptTimeout;
 
 
 //purchases
-class Business {
-  constructor(name, buttonText, cost, moneyPerSecond, count, costIncrease, tName, tCost, tCount, tMPS, bBuy, specialBuyFunction, specialBuyCondition) {
+class Purchase {
+  constructor(name, buttonText, cost, moneyPerSecond, count, costIncrease, minLove, tName, tCost, tCount, tMPS, bBuy, specialBuyFunction, specialBuyCondition) {
     this.name = name;
     this.cost = cost;
     this.moneyPerSecond = moneyPerSecond;
@@ -66,6 +72,7 @@ class Business {
       this.cost *= costIncrease;
       this.tCost.innerHTML = truncMoney(this.cost);
       if (specialBuyFunction != null) { specialBuyFunction(); }
+      setMinLove(minLove);
     }
 
     this.bBuy.addEventListener("click", this.buy);
@@ -81,13 +88,14 @@ class Business {
 }
 
 //business-related
-var business0 = new Business(
+var business0 = new Purchase(
   "Business Associate",
   "Hire",
   10,
   0.3,
   0,
   1.1,
+  96,
   "tBusinessName0",
   "tBusinessCost0",
   "tBusinessCount0",
@@ -95,13 +103,14 @@ var business0 = new Business(
   "bBusinessBuy0"
 );
 
-var business1 = new Business(
+var business1 = new Purchase(
   "Corner Store",
   "Purchase",
   30,
   1.2,
   0,
   1.1,
+  85,
   "tBusinessName1",
   "tBusinessCost1",
   "tBusinessCount1",
@@ -109,13 +118,14 @@ var business1 = new Business(
   "bBusinessBuy1"
 );
 
-var business2 = new Business(
+var business2 = new Purchase(
   "Drug Store",
   "Purchase",
   100,
   4,
   0,
   1.1,
+  70,
   "tBusinessName2",
   "tBusinessCost2",
   "tBusinessCount2",
@@ -123,13 +133,14 @@ var business2 = new Business(
   "bBusinessBuy2"
 );
 
-var shady0 = new Business(
+var shady0 = new Purchase(
   "Illegal Bar",
   "Purchase",
   800,
   38,
   0,
   1.1,
+  57,
   "tShadyName0",
   "tShadyCost0",
   "tShadyCount0",
@@ -137,13 +148,14 @@ var shady0 = new Business(
   "bShadyBuy0"
 );
 
-var shady1 = new Business(
+var shady1 = new Purchase(
   "Underground Gambling Joint",
   "Purchase",
   3000,
   171,
   0,
   1.1,
+  45,
   "tShadyName1",
   "tShadyCost1",
   "tShadyCount1",
@@ -151,13 +163,14 @@ var shady1 = new Business(
   "bShadyBuy1"
 );
 
-var shady2 = new Business(
+var shady2 = new Purchase(
   "Turn Drug Store into Alcohol Distribution Facility",
   "Purchase",
   15000,
   1000,
   0,
   1.1,
+  18,
   "tShadyName2",
   "tShadyCost2",
   "tShadyCount2",
@@ -172,13 +185,14 @@ var shady2 = new Business(
   }
 );
 
-var shady3 = new Business(
+var shady3 = new Purchase(
   "?????????",
   "Purchase",
   200000,
   0,
   0,
   1,
+  12,
   "tShadyName3",
   "tShadyCost3",
   "tShadyCount3",
@@ -196,13 +210,14 @@ var shady3 = new Business(
 );
 
 //Daisy-related
-var daisy0 = new Business(
+var daisy0 = new Purchase(
   "West Egg Mansion",
   "Purchase",
   500000,
   0,
   0,
   1,
+  10,
   "tDaisyName0",
   "tDaisyCost0",
   "tDaisyCount0",
@@ -217,13 +232,14 @@ var daisy0 = new Business(
   }
 );
 
-var daisy1 = new Business(
+var daisy1 = new Purchase(
   "Enormous Party",
   "Purchase",
   100000,
   0,
   0,
   1.1,
+  7,
   "tDaisyName1",
   "tDaisyCost1",
   "tDaisyCount1",
@@ -234,13 +250,14 @@ var daisy1 = new Business(
   }
 );
 
-var daisy2 = new Business(
+var daisy2 = new Purchase(
   "Fancy Car",
   "Purchase",
   200000,
   0,
   0,
   1.1,
+  4,
   "tDaisyName2",
   "tDaisyCost2",
   "tDaisyCount2",
@@ -251,13 +268,14 @@ var daisy2 = new Business(
   }
 );
 
-var daisy3 = new Business(
+var daisy3 = new Purchase(
   "Luxurious Yacht",
   "Purchase",
   350000,
   0,
   0,
   1.1,
+  1,
   "tDaisyName3",
   "tDaisyCost3",
   "tDaisyCount3",
@@ -268,13 +286,14 @@ var daisy3 = new Business(
   }
 );
 
-var daisy4 = new Business(
+var daisy4 = new Purchase(
   "Ridiculously Extravagant Fruit Juicer",
   "Purchase",
   600000,
   0,
   0,
   1.1,
+  0,
   "tDaisyName4",
   "tDaisyCost4",
   "tDaisyCount4",
@@ -299,7 +318,7 @@ gameStart();
 //common events
 function gameStart() {
   addEventListeners();
-  setInterval(doIncome, timestep);
+  setInterval(doTimeStep, timestep);
   initializeui();
 }
 
@@ -325,7 +344,7 @@ function initializeui() {
 }
 
 function updateui() {
-  tLove.innerHTML = Math.trunc(love);
+  tLove.innerHTML = Math.trunc(101 - invLove);
   tMoney.innerHTML = truncMoney(money);
   tIncomePerSecond.innerHTML = truncMoney(getIncomePerSecond());
   purchases.forEach(b => b.updateButton());
@@ -343,9 +362,10 @@ function truncMoney(value) {
 
 
 //automatic income
-function doIncome() {
-  if (onMainScreen) {
+function doTimeStep() {
+  if (onMainScreen && !paused) {
     money += getIncomePerTimeStep(timestep);
+    invLove += getDeltaInvLove(timestep);
     updateui();
   }
 }
@@ -357,11 +377,29 @@ function getIncomePerSecond() {
 }
 
 
+//automatic LOVE
+function getDeltaInvLove(step) {
+  k = 0.1;
+  m = 101 - minLove - prevInvLove; //101 accounts for truncation
+  invLoveDiff = invLove - prevInvLove
+  lovePerSec = k * invLoveDiff * (1 - invLoveDiff / m);
+  //updateConsole(lovePerSec)
+  return lovePerSec * (step / 1000);
+}
+
+function setMinLove(value) {
+  if (value < minLove) {
+    prevInvLove = invLove - 0.8;
+    minLove = value;
+  }
+}
+
+
 //button events
 function clickMoney(){
   money += incomePerClick;
   updateui();
-  updateConsole(truncMoney(money) + " dolar");
+  //updateConsole(truncMoney(money) + " dolar");
 }
 
 
