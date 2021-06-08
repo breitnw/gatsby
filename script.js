@@ -748,6 +748,7 @@ function decreaseLoveFinal() {
         //imgCutsceneHeart.classList.add("hidden");
       }, 5000)
       doLoveDecrease = false;
+      cutsceneAdvanceable = false;
     }
   }
 }
