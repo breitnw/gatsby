@@ -18,6 +18,7 @@ const cLine0 = document.getElementById("cLine0");
 const cLine1 = document.getElementById("cLine1");
 const cLine2 = document.getElementById("cLine2");
 const cLine3 = document.getElementById("cLine3");
+const dConsole = document.getElementById("dConsole");
 
 const tIncomePerClick = document.getElementById("tIncomePerClick");
 
@@ -408,9 +409,9 @@ function doTimeStep() {
     if (invLove >= 99) {
       eFinal();
     }
+    updatePortrait();
     updateui();
   }
-  updatePortrait();
   if (doLoveIncrease) { animateLoveIncrease(timestep) }
 }
 
@@ -520,7 +521,6 @@ function updateConsole(newLine)
   clearTimeout(consoleBlinkTimeout);
   consoleBlinkTimeout = setTimeout(() => {  cLine0.classList.remove("blinkAnimation"); }, 3000);
 }
-
 
 
 //CUTSCENE SCREEN
