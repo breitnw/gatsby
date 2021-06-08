@@ -24,6 +24,10 @@ const tIncomePerClick = document.getElementById("tIncomePerClick");
 const tCutsceneText = document.getElementById("tCutsceneText");
 const tCutsceneSpeaker = document.getElementById("tCutsceneSpeaker");
 const tCutsceneEnterPrompt = document.getElementById("tCutsceneEnterPrompt");
+const dCutsceneMain = document.getElementById("dCutsceneMain");
+const dCutsceneFinal = document.getElementById("dCutsceneFinal");
+const tLoveFinal = document.getElementById("tLoveFinal");
+const imgCutsceneHeart = document.getElementById("imgCutsceneHeart");
 
 
 //set global variables
@@ -40,12 +44,16 @@ const timestep = 17;
 let onMainScreen = true;
 let paused = false;
 let finalEventTriggered = false;
+let wolfshiemEventTriggered = false;
+let doLoveIncrease = false;
+let doLoveDecrease = true;
 
 let consoleLines = ["", "", "", ""];
 var consoleBlinkTimeout;
 
 let cutsceneAdvanceable = false;
 var promptTimeout;
+let loveFinal = 99;
 
 
 //purchases
@@ -132,8 +140,9 @@ var business2 = new Purchase(
   "tBusinessCount2",
   "bBusinessBuy2",
   function() {
-    if (business2.count === 1) {
+    if (!wolfshiemEventTriggered) {
       setTimeout(() => { eWolfshiem() }, 25000);
+      wolfshiemEventTriggered = true;
     }
   }
 );
@@ -245,7 +254,7 @@ var daisy1 = new Purchase(
   "tDaisyCount1",
   "bDaisyBuy1",
   function() {
-    updateConsole("daisy purchase");
+    updateConsole("Hmm, that didn’t seem to increase Daisy’s love for you either. Try something else.");
   }
 );
 
@@ -262,7 +271,7 @@ var daisy2 = new Purchase(
   "tDaisyCount2",
   "bDaisyBuy2",
   function() {
-    updateConsole("daisy purchase");
+    updateConsole("Hmm, that didn’t seem to increase Daisy’s love for you either. Try something else.");
   }
 );
 
@@ -279,7 +288,7 @@ var daisy3 = new Purchase(
   "tDaisyCount3",
   "bDaisyBuy3",
   function() {
-    updateConsole("daisy purchase");
+    updateConsole("Hmm, that didn’t seem to increase Daisy’s love for you either. Try something else.");
   }
 );
 
@@ -296,13 +305,13 @@ var daisy4 = new Purchase(
   "tDaisyCount4",
   "bDaisyBuy4",
   function() {
-    updateConsole("daisy purchase");
+    updateConsole("Hmm, even that didn’t seem to increase Daisy’s love for you. What is there left to do?");
   },
 );
 
 var daisy5 = new Purchase(
   "Invite Daisy for Tea",
-  "Purchase",
+  "Invite",
   0,
   0,
   0,
@@ -313,7 +322,10 @@ var daisy5 = new Purchase(
   "tDaisyCount5",
   "bDaisyBuy5",
   function() {
-    updateConsole("daisy purchase");
+    updateConsole("Hmm, that didn't seem to... oh?");
+    setTimeout(() => { updateConsole("Wait… is this actually working?") }, 5000)
+    doLoveIncrease = true;
+    daisy5.bBuy.disabled = true;
   },
 );
 
@@ -355,8 +367,16 @@ function initializeui() {
   dShady.classList.add("hidden");
   dHousePurchased.classList.add("hidden");
   dFinal.classList.add("hidden");
+  dCutsceneFinal.classList.add("hidden");
+  imgCutsceneHeart.classList.add("hidden");
+
   tIncomePerClick.innerHTML = truncMoney(incomePerClick);
   updateui();
+
+  updateConsole("Mr. Jay Gatsby- You’re in New York City, and you’re completely broke. Maybe you can find some menial labor to get some money.");
+  setTimeout(() => {
+    updateConsole("Otherwise, forget about trying to find your long lost love, Daisy. You’d probably need to own a half-million dollar mansion, or something ludicrously expensive like that.")
+  }, 10000)
 }
 
 function updateui() {
@@ -382,13 +402,13 @@ function doTimeStep() {
   if (onMainScreen && !paused) {
     money += getIncomePerTimeStep(timestep);
     invLove += getDeltaInvLove(timestep);
-    if (invLove >= 99.5) {
+    if (invLove >= 99) {
       eFinal();
-      paused = true;
     }
     //updateConsole(invLove);
     updateui();
   }
+  if (doLoveIncrease) { animateLoveIncrease(timestep) }
 }
 
 function getIncomePerTimeStep(step) { return getIncomePerSecond() * step / 1000; }
@@ -414,6 +434,17 @@ function setMinLove(value) {
   }
 }
 
+function animateLoveIncrease(step) {
+  if (invLove < 2) {
+    startEndingCutscene();
+    doLoveIncrease = false;
+  }
+  k = 0.2;
+  invLove -= k * (100 - invLove) * (step / 1000);
+  tLove.innerHTML = Math.trunc(101 - invLove);
+  //updateConsole(invLove)
+}
+
 
 //button events
 function clickMoney() {
@@ -435,17 +466,17 @@ function subLove(val) {
 
 //major events
 function eWolfshiem() {
-  updateConsole("WOLFSHIEM EVENT");
+  updateConsole("You’ve met Meyer Wolfshiem! He says he knows how you can get filthy rich stupid quick; although I don’t remember him mentioning whether or not it’s legal.");
   revealDiv(dShady)
 }
 function eHouse() {
-  updateConsole("HOUSE PURCHASED EVENT")
+  updateConsole("Unfortunately, buying a massive estate didn’t remind Daisy of your existence. But now that you’ve got a mansion, you can buy a lot more things that will, right?")
   revealDiv(dHousePurchased);
 }
 function eFinal() {
-  updateConsole("FINAL DAISY EVENT")
   revealDiv(dFinal);
   finalEventTriggered = true;
+  paused = true;
 }
 function revealDiv(div) {
   div.classList.remove('hidden');
@@ -465,7 +496,6 @@ function updateConsole(newLine)
   cLine0.classList.add("blinkAnimation");
   clearTimeout(consoleBlinkTimeout);
   consoleBlinkTimeout = setTimeout(() => {  cLine0.classList.remove("blinkAnimation"); }, 3000);
-
 }
 
 
@@ -482,7 +512,6 @@ function setMainScreen(value)
     onMainScreen = true;
   } else {
     dMainScreen.classList.add("hidden");
-    dCutsceneScreen.classList.remove("hidden");
     pageBody.style.backgroundColor = "black";
     onMainScreen = false;
   }
@@ -595,9 +624,9 @@ function advanceCutscene() {
   if (cutsceneQueue.length > 0) {
     cutsceneQueue.shift()();
   } else {
-    setMainScreen(true);
+    endCutsceneDialogue();
+    //setMainScreen(true);
   }
-
 }
 
 
@@ -609,16 +638,33 @@ function startEndingCutscene(){
   setEnterPromptVisibility(false);
   clearCutsceneText();
   setTimeout(() => {
+    dCutsceneScreen.classList.remove("hidden");
     advanceCutscene();
-  }, 1000);
+  }, 3000);
 }
 
 //queue represents final cutscene dialogue in order it is shown
 const cutsceneQueue = [
   function() {
     cutsceneSay(
+      "GATSBY",
+      "Daisy, that’s all over now. It doesn’t matter any more./Just tell Tom the truth--that you never loved him--and it’s all wiped out forever.",
+      "none",
+      50
+    )
+  },
+  function() {
+    cutsceneSay(
+      "DAISY",
+      "Oh, you want too much! I love you now--isn’t that enough? I can’t help what’s past./I did love him once--but I loved you too.",
+      "none",
+      50
+    )
+  },
+  function() {
+    cutsceneSay(
       "TOM",
-      "*Even that’s a lie. She didn’t even know you were alive.*/Why--there’re things between Daisy and me that you’ll never know, things that neither of us can forget.",
+      "Even that’s a lie. She didn’t even know you were alive./Why--there’re things between Daisy and me that you’ll never know, things that neither of us can forget.",
       "none",
       50
     )
@@ -656,3 +702,26 @@ const cutsceneQueue = [
     )
   }
 ]
+
+function endCutsceneDialogue() {
+  dCutsceneMain.classList.add("hidden");
+  setTimeout(() => {
+    dCutsceneFinal.classList.remove("hidden");
+    setInterval(() => { decreaseLoveFinal() }, timestep);
+  }, 1000);
+}
+
+function decreaseLoveFinal() {
+  if (doLoveDecrease) {
+    loveFinal -= 0.5;
+    tLoveFinal.innerHTML = Math.trunc(loveFinal);
+    if (loveFinal < 0) {
+      dCutsceneFinal.classList.add("hidden");
+      imgCutsceneHeart.classList.remove("hidden");
+      setTimeout(() => {
+        imgCutsceneHeart.classList.add("hidden");
+      }, 5000)
+      doLoveDecrease = false;
+    }
+  }
+}

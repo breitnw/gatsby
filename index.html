@@ -52,6 +52,7 @@
           </p>
           <!--CHEAT BUTTONS-->
           <!--TODO: DELETE LATER-->
+          <!--
           <button onclick = startEndingCutscene()>START ENDING CUTSCENE</button><br>
           <button onclick = eWolfshiem()>TRIGGER WOLFSHIEM EVENT</button><br>
           <button onclick = eHouse()>TRIGGER HOUSE BOUGHT EVENT</button><br>
@@ -62,6 +63,7 @@
           <button onclick = addMoney(10000)>+10000</button>
           <button onclick = addMoney(100000)>+100000</button>
           <button onclick = subLove(5)>-5%</button>
+          -->
         </div>
 
 
@@ -149,7 +151,7 @@
             <br>
             Cost: $<span id = tDaisyCost0></span>
             <br>
-            Chance of +20% LOVE
+            Chance of +40% LOVE
           </p>
 
 
@@ -173,7 +175,7 @@
               <br>
               Cost: $<span id = tDaisyCost2></span>
               <br>
-              Chance of +15% LOVE
+              Chance of +10% LOVE
             </p>
 
             <p>
@@ -184,7 +186,7 @@
               <br>
               Cost: $<span id = tDaisyCost3></span>
               <br>
-              Chance of +40% LOVE
+              Chance of +20% LOVE
             </p>
 
             <p>
@@ -195,7 +197,7 @@
               <br>
               Cost: $<span id = tDaisyCost4></span>
               <br>
-              Chance of +60% LOVE
+              Chance of +30% LOVE
             </p>
           </div>
 
@@ -205,7 +207,6 @@
               <b><span id = tDaisyName5></b>
               <br>
               <button id = bDaisyBuy5></button>
-              <span id = tDaisyCount5></span>
               <br>
               Cost: $<span id = tDaisyCost5></span>
               <br>
@@ -218,12 +219,18 @@
 
     <!-- CUTSCENE SCREEN -->
     <div id = dCutsceneScreen>
-      <img src=smiley.gif alt=j id = cutscenePortrait>
-      <p id = tCutsceneSpeaker></p>
-      <p id = tCutsceneText></p>
+      <div id = dCutsceneMain>
+        <img src=smiley.gif alt=j id = cutscenePortrait>
+        <p id = tCutsceneSpeaker></p>
+        <p id = tCutsceneText></p>
 
-      <p id = tCutsceneEnterPrompt>CLICK ANYWHERE TO CONTINUE ></p>
+        <p id = tCutsceneEnterPrompt>CLICK ANYWHERE TO CONTINUE ></p>
+      </div>
+      <div id = dCutsceneFinal>
+        <h2>LOVE: <span id = tLoveFinal>100</span>%</h2>
+      </div>
     </div>
+    <img src=greenheart.gif alt=j id = imgCutsceneHeart>
 
     <script src = script.js></script>
   </body>
