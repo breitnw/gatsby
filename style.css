@@ -26,6 +26,7 @@
 }
 #portrait {
   width: inherit;
+  background-color: black;
 }
 h3 {
   line-height: 60%;

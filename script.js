@@ -5,6 +5,7 @@ const dMainScreen = document.getElementById("dMainScreen");
 const dCutsceneScreen = document.getElementById("dCutsceneScreen");
 
 //main screen
+const portrait = document.getElementById("portrait");
 const button = document.getElementById("btn");
 const tLove = document.getElementById("tLove");
 const tMoney = document.getElementById("tMoney");
@@ -28,6 +29,7 @@ const dCutsceneMain = document.getElementById("dCutsceneMain");
 const dCutsceneFinal = document.getElementById("dCutsceneFinal");
 const tLoveFinal = document.getElementById("tLoveFinal");
 const imgCutsceneHeart = document.getElementById("imgCutsceneHeart");
+const cutscenePortrait = document.getElementById("cutscenePortrait");
 
 
 //set global variables
@@ -35,6 +37,7 @@ let invLove = 0;
 let minLove = 100;
 let prevInvLove = 100;
 setMinLove(100);
+let currentExpression = "";
 
 let money = 0;
 let totalAssets = 0;
@@ -380,7 +383,7 @@ function initializeui() {
 }
 
 function updateui() {
-  tLove.innerHTML = Math.trunc(101 - invLove);
+  tLove.innerHTML = getLove();
   tMoney.innerHTML = truncMoney(money);
   tIncomePerSecond.innerHTML = truncMoney(getIncomePerSecond());
   purchases.forEach(p => p.updateButton());
@@ -405,9 +408,9 @@ function doTimeStep() {
     if (invLove >= 99) {
       eFinal();
     }
-    //updateConsole(invLove);
     updateui();
   }
+  updatePortrait();
   if (doLoveIncrease) { animateLoveIncrease(timestep) }
 }
 
@@ -441,8 +444,28 @@ function animateLoveIncrease(step) {
   }
   k = 0.2;
   invLove -= k * (100 - invLove) * (step / 1000);
-  tLove.innerHTML = Math.trunc(101 - invLove);
+  tLove.innerHTML = getLove();
   //updateConsole(invLove)
+}
+
+function getLove() {
+  return Math.trunc(101 - invLove);
+}
+
+
+//update the expression shown on the portrait
+function updatePortrait() {
+  love = getLove();
+  if (love <= 10) { portraitText = "gatsby_4.gif"; }
+  else if (love <= 25) { portraitText = "gatsby_3.gif" }
+  else if (love <= 50) { portraitText = "gatsby_2.gif" }
+  else if (love <= 80) { portraitText = "gatsby_1.gif" }
+  else { portraitText = "gatsby_0.gif" }
+
+  if (currentExpression != portraitText) {
+    portrait.src = portraitText;
+    currentExpression = portraitText;
+  }
 }
 
 
@@ -593,6 +616,7 @@ function typeCutsceneText(text, speed, punctuationDelay, brDelay, impactDelay) {
 
 function setCutsceneText(text) { tCutsceneText.innerHTML = text; }
 function setCutsceneSpeaker(speaker) { tCutsceneSpeaker.innerHTML = speaker; }
+function setCutscenePortrait(name) { cutscenePortrait.src = name; }
 function clearCutsceneText() {
   tCutsceneText.innerHTML = "";
   tCutsceneSpeaker.innerHTML = "";
@@ -600,6 +624,7 @@ function clearCutsceneText() {
 
 //display a full piece of cutscene dialogue
 function cutsceneSay(speaker, text, expression, textSpeed) {
+  setCutscenePortrait(expression);
   setCutsceneSpeaker(speaker);
   typeCutsceneText(text, textSpeed, 4, 1, 40);
 }
@@ -649,7 +674,7 @@ const cutsceneQueue = [
     cutsceneSay(
       "GATSBY",
       "Daisy, that’s all over now. It doesn’t matter any more./Just tell Tom the truth--that you never loved him--and it’s all wiped out forever.",
-      "none",
+      "gatsby_talk_0.gif",
       50
     )
   },
@@ -657,7 +682,7 @@ const cutsceneQueue = [
     cutsceneSay(
       "DAISY",
       "Oh, you want too much! I love you now--isn’t that enough? I can’t help what’s past./I did love him once--but I loved you too.",
-      "none",
+      "gatsby_1.gif",
       50
     )
   },
@@ -665,7 +690,7 @@ const cutsceneQueue = [
     cutsceneSay(
       "TOM",
       "Even that’s a lie. She didn’t even know you were alive./Why--there’re things between Daisy and me that you’ll never know, things that neither of us can forget.",
-      "none",
+      "gatsby_2.gif",
       50
     )
   },
@@ -673,7 +698,7 @@ const cutsceneQueue = [
     cutsceneSay(
       "GATSBY",
       "You don’t understand!/You’re not going to take care of her anymore. Daisy’s leaving you.",
-      "none",
+      "gatsby_talk_1.gif",
       50
     )
   },
@@ -681,7 +706,7 @@ const cutsceneQueue = [
     cutsceneSay(
       "TOM",
       "She’s not leaving me!/Certainly not for a common swindler who’d have to steal the ring he put on her finger.",
-      "none",
+      "gatsby_2.gif",
       50
     )
   },
@@ -689,7 +714,7 @@ const cutsceneQueue = [
     cutsceneSay(
       "GATSBY",
       ".....",
-      "none",
+      "gatsby_3.gif",
       150
     )
   },
@@ -697,7 +722,7 @@ const cutsceneQueue = [
     cutsceneSay(
       "TOM",
       "You two start on home, Daisy. In Mr. Gatsby’s car. Go on. He won’t annoy you./I think he realizes that his presumptuous little flirtation is over.",
-      "none",
+      "gatsby_4.gif",
       50
     )
   }
