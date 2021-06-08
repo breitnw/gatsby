@@ -64,6 +64,11 @@ h3 {
      font-size: 13px;
   }
 }
+@media screen and (max-width: 1200px) {
+  #dConsole {
+     font-size: 10px;
+  }
+}
 #consoleOld {
   color: gray;
 }
