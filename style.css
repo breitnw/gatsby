@@ -59,6 +59,11 @@ h3 {
   padding-left: 15px;
   padding-right: 15px;
 }
+@media screen and (min-width: 1400px) {
+  #dConsole {
+     font-size: 13px;
+  }
+}
 #consoleOld {
   color: gray;
 }
